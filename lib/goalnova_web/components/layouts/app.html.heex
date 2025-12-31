@@ -1,32 +1,104 @@
-<header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-    <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
-      </a>
-      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
-      </p>
+<%!-- Layout Profesional: Header + Main + Footer (Full Height, No Body Scroll) --%>
+<div class="flex flex-col h-screen overflow-hidden">
+  <%!-- HEADER --%>
+  <header class="flex-none border-b border-[var(--border-subtle)] bg-[var(--surface-overlay)]/95 backdrop-blur-md z-40">
+    <div>
+      <div class="flex h-16 justify-between items-center">
+        <%!-- Logo --%>
+        <div class="flex items-center">
+          <.link navigate={~p"/"} class="flex items-center gap-2 rounded-lg px-2 py-1 group">
+            <img src="/images/goalnova.svg" alt="GoalNova" class="w-8 h-8" />
+            <span class="text-xl font-bold text-gradient">GoalNova</span>
+          </.link>
+        </div>
+
+        <%!-- Controles --%>
+        <div class="flex items-center gap-3">
+          <%!-- Toggle Dark Mode --%>
+          <button
+            type="button"
+            class="p-2 rounded-full text-brand hover:bg-[var(--surface-hover)] transition-colors"
+            onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')"
+          >
+            <span class="hero-sun w-5 h-5 hidden dark:block" />
+            <span class="hero-moon w-5 h-5 block dark:hidden" />
+          </button>
+
+          <%!-- Menú Perfil --%>
+          <.dropdown id="profile-menu">
+            <:trigger :let={dropdown}>
+              <button
+                type="button"
+                class="flex items-center gap-2 rounded-full bg-[var(--color-brand-subtle)] p-1 pr-3 hover:bg-[var(--surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-focus)] transition-all"
+                phx-click={JS.toggle(to: "##{dropdown.dropdown_id}")}
+              >
+                <%= if @current_user do %>
+                  <%= if @current_user[:picture] do %>
+                    <img src={@current_user[:picture]} class="w-8 h-8 rounded-full ring-2 ring-brand" alt="Avatar" />
+                  <% else %>
+                    <.svg name="hero-squares-2x2" class="w-8 h-8 text-brand" />
+                  <% end %>
+                  <span class="text-sm font-medium text-brand hidden sm:block">
+                    <%= @current_user[:name] || @current_user[:email] %>
+                  </span>
+                <% else %>
+                  <div class="w-8 h-8 rounded-full bg-[var(--color-brand-primary)] flex items-center justify-center">
+                    <.svg name="hero-user-solid" class="text-white w-4 h-4" />
+                  </div>
+                <% end %>
+                <.svg name="hero-chevron-down" class="w-4 h-4 text-brand" />
+              </button>
+            </:trigger>
+            <:header>
+              <p class="text-sm font-semibold text-[var(--text-main)]">
+                <%= if @current_user, do: @current_user[:name] || "Usuario", else: "Invitado" %>
+              </p>
+              <p :if={@current_user} class="text-sm text-subtle truncate">
+                <%= @current_user[:email] %>
+              </p>
+            </:header>
+            <:item navigate="/" icon="hero-squares-2x2">
+              <img src="/images/goalnova.svg" alt="GoalNova" class="w-8 h-8" />
+              <span class="font-medium">GoalNova</span>
+            </:item>
+            <:item :if={@current_user} navigate="/profile" icon="hero-user">
+              Mi Perfil
+            </:item>
+            <:item :if={@current_user} navigate="/admin" icon="hero-cog-6-tooth">
+              Administración
+            </:item>
+            <%!-- Logout es ruta interna NO LiveView (controller), requiere redirect --%>
+            <:item :if={@current_user} href="/auth/logout" data-phx-link="redirect" icon="hero-arrow-right-on-rectangle" class="text-[var(--signal-danger-main)] hover:bg-[var(--signal-danger-subtle)]">
+              Cerrar Sesión
+            </:item>
+            <:item :if={!@current_user} navigate="/auth/login" icon="hero-arrow-left-on-rectangle" class="text-brand">
+              Iniciar Sesión
+            </:item>
+          </.dropdown>
+        </div>
+      </div>
     </div>
-    <div class="flex items-center gap-4 font-semibold leading-6 text-zinc-900">
-      <a href="https://twitter.com/elixirphoenix" class="hover:text-zinc-700">
-        @elixirphoenix
-      </a>
-      <a href="https://github.com/phoenixframework/phoenix" class="hover:text-zinc-700">
-        GitHub
-      </a>
-      <a
-        href="https://hexdocs.pm/phoenix/overview.html"
-        class="rounded-lg bg-zinc-100 px-2 py-1 hover:bg-zinc-200/80"
-      >
-        Get Started <span aria-hidden="true">&rarr;</span>
-      </a>
+  </header>
+
+  <%!-- MAIN CON SCROLL INTERNO --%>
+  <main class="flex-1 overflow-y-auto">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <.flash_group flash={@flash} />
+      <%= @inner_content %>
     </div>
-  </div>
-</header>
-<main class="px-4 py-20 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-2xl">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
-  </div>
-</main>
+  </main>
+
+  <%!-- FOOTER FIJO --%>
+  <footer class="flex-none border-t border-[var(--border-subtle)] bg-[var(--surface-overlay)]/95 backdrop-blur-md">
+    <div class="p-4">
+      <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm text-subtle">
+        <p>© <%= DateTime.utc_now().year %> GoalNova. Sistema Operativo de Relaciones.</p>
+        <div class="flex gap-4">
+          <.link navigate={~p"/demo"} class="p-2 rounded-full text-subtle hover:text-brand hover:bg-[var(--surface-hover)] transition-colors" title="Demo">
+            <.svg name="hero-beaker" class="w-5 h-5" />
+          </.link>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

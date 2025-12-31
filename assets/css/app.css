@@ -2,4 +2,327 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* This file is for your main application CSS */
+/* ==========================================================================
+   GOALNOVA DESIGN SYSTEM - TOKENS
+   Implementation: CSS Custom Properties
+   Strategy: Titanium Zinc (Neutral Dark Mode)
+   ========================================================================== */
+
+@layer base {
+    :root {
+        /* --- 1. BRAND IDENTITY (Violet) --- */
+        --color-brand-primary: #7C3AED;
+        /* violet-600 */
+        --color-brand-hover: #6D28D9;
+        /* violet-700 */
+        --color-brand-active: #5B21B6;
+        /* violet-800 */
+        --color-brand-contrast: #ffffff;
+        /* text-white */
+        --color-brand-subtle: #F5F3FF;
+        /* violet-50 (Fondos muy claros) */
+
+        /* --- 2. SURFACES (Light Mode - Soft Violet Paper) --- */
+        --surface-base: #F8F7FA;
+        /* Gris muy claro con toque violeta apagado, menos fluorescente */
+        --surface-card: #FCFBFD;
+        /* Blanco-gris con suspiro de violeta muy sutil */
+        --surface-overlay: #FCFBFD;
+        /* Blanco-gris con suspiro de violeta muy sutil (Modales/Popovers) */
+        --surface-sunken: #F0EEF3;
+        /* Gris claro con violeta apagado para inputs */
+        --surface-hover: #F0EEF3;
+        /* Gris claro con violeta apagado para hover states */
+
+        /* --- 3. TEXT & CONTENT (Light Mode - Ink) --- */
+        --text-main: #18181B;
+        /* zinc-900 (Casi negro) */
+        --text-muted: #71717A;
+        /* zinc-500 (Gris medio) */
+        --text-disabled: #A1A1AA;
+        /* zinc-400 */
+        --text-inverse: #FFFFFF;
+        /* white */
+
+        /* --- 4. BORDERS (Light Mode) --- */
+        --border-subtle: #D4D4D8;
+        /* zinc-300 - Menos sutil, más visible */
+        --border-strong: #A1A1AA;
+        /* zinc-400 - Bordes más fuertes */
+        --ring-focus: #7C3AED;
+        /* violet-600 (Igual al brand) */
+
+        /* --- 5. SEMANTIC SIGNALS (Light Mode) --- */
+        /* Success (Emerald) */
+        --signal-success-main: #059669;
+        /* emerald-600 */
+        --signal-success-subtle: #ECFDF5;
+        /* emerald-50 */
+        --signal-success-text: #065F46;
+        /* emerald-800 */
+
+        /* Warning (Amber) */
+        --signal-warning-main: #D97706;
+        /* amber-600 */
+        --signal-warning-subtle: #FFFBEB;
+        /* amber-50 */
+        --signal-warning-text: #92400E;
+        /* amber-800 */
+
+        /* Danger (Rose) */
+        --signal-danger-main: #E11D48;
+        /* rose-600 */
+        --signal-danger-subtle: #FFF1F2;
+        /* rose-50 */
+        --signal-danger-text: #9F1239;
+        /* rose-800 */
+
+        /* Info (Sky) */
+        --signal-info-main: #0284C7;
+        /* sky-600 */
+        --signal-info-subtle: #F0F9FF;
+        /* sky-50 */
+        --signal-info-text: #075985;
+        /* sky-800 */
+
+        /* --- 6. SECONDARY ACTIONS (Neutral Interaction) --- */
+        --action-neutral-bg: #FFFFFF;
+        --action-neutral-border: #D4D4D8;
+        /* zinc-300 */
+        --action-neutral-text: #3F3F46;
+        /* zinc-700 */
+        --action-neutral-hover: #F4F4F5;
+        /* zinc-100 */
+
+        /* --- 7. EFFECTS (Shadows) --- */
+        --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        --shadow-popover: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+
+    .dark {
+        /* --- 1. BRAND IDENTITY (Dark Mode - Brightness Adjustment) --- */
+        --color-brand-primary: #8B5CF6;
+        /* violet-500 (Más brillante para dark) */
+        --color-brand-hover: #7C3AED;
+        /* violet-600 */
+        --color-brand-active: #6D28D9;
+        /* violet-700 */
+        --color-brand-subtle: #2E1065;
+        /* violet-950 (Fondos oscuros brand) */
+
+        /* --- 2. SURFACES (Dark Mode - "Deep Space Identity") --- */
+        /* Gris oscuro apagado, suave para la vista */
+        --surface-base: #212733;
+        /* Gris oscuro base, no cansa la vista */
+        --surface-card: #2a3441;
+        /* Un poco más claro para las tarjetas */
+        --surface-overlay: #323d4a;
+        /* Overlay con contraste suave */
+        --surface-sunken: #1a1f28;
+        /* Input background oscuro pero suave */
+        --surface-hover: #323d4a;
+        /* Hover states con contraste visible sobre surface-card */
+
+        /* --- 3. TEXT & CONTENT (Dark Mode - Light Projection) --- */
+        --text-main: #F4F4F5;
+        /* zinc-100 (Casi blanco) */
+        --text-muted: #A1A1AA;
+        /* zinc-400 (Gris legible) */
+        --text-disabled: #52525B;
+        /* zinc-600 */
+        --text-inverse: #18181B;
+        /* zinc-900 */
+
+        /* --- 4. BORDERS (Dark Mode - Structure definition) --- */
+        --border-subtle: #52525B;
+        /* zinc-600 - Contraste visible sobre surface-overlay (#323d4a) */
+        --border-strong: #71717A;
+        /* zinc-500 - Bordes más fuertes */
+        --ring-focus: #8B5CF6;
+        /* violet-500 */
+
+        /* --- 5. SEMANTIC SIGNALS (Dark Mode - Muted for eye safety) --- */
+        /* Ajustados para no ser neón radioactivo */
+        --signal-success-main: #10B981;
+        /* emerald-500 */
+        --signal-success-subtle: #064E3B;
+        /* emerald-900 */
+        --signal-success-text: #D1FAE5;
+        /* emerald-100 */
+
+        --signal-warning-main: #F59E0B;
+        /* amber-500 */
+        --signal-warning-subtle: #78350F;
+        /* amber-900 */
+        --signal-warning-text: #FEF3C7;
+        /* amber-100 */
+
+        --signal-danger-main: #F43F5E;
+        /* rose-500 */
+        --signal-danger-subtle: #881337;
+        /* rose-900 */
+        --signal-danger-text: #FFE4E6;
+        /* rose-100 */
+
+        --signal-info-main: #0EA5E9;
+        /* sky-500 */
+        --signal-info-subtle: #0C4A6E;
+        /* sky-900 */
+        --signal-info-text: #E0F2FE;
+        /* sky-100 */
+
+        /* --- 6. SECONDARY ACTIONS (Dark Mode) --- */
+        --action-neutral-bg: transparent;
+        --action-neutral-border: #3F3F46;
+        /* zinc-700 */
+        --action-neutral-text: #E4E4E7;
+        /* zinc-200 */
+        --action-neutral-hover: #27272A;
+        /* zinc-800 */
+
+        /* --- 7. EFFECTS (Dark Mode - No Shadows) --- */
+        --shadow-card: none;
+        /* En dark mode usamos elevación por color, no sombra */
+        --shadow-popover: 0 0 0 1px #3F3F46;
+        /* Borde sutil pare reemplazar sombra */
+    }
+}
+
+@layer base {
+    html {
+        @apply h-full overflow-hidden;
+    }
+
+    body {
+        @apply h-full overflow-hidden bg-[var(--surface-base)] text-[var(--text-main)] font-sans antialiased;
+    }
+
+    a {
+        @apply transition-colors;
+    }
+    
+    /* Color de texto para links normales (excluye botones) */
+    a:not(.btn) {
+        @apply text-[var(--color-brand-primary)] hover:text-[var(--color-brand-hover)];
+    }
+
+    /* ==========================================================================
+       CUSTOM SCROLLBAR STYLING
+       Adapts to light/dark mode using design tokens
+       ========================================================================== */
+    
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-brand-subtle) var(--surface-sunken);
+    }
+
+    /* WebKit (Chrome, Edge, Safari) */
+    *::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: var(--surface-sunken);
+        border-radius: 5px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background: var(--color-brand-subtle);
+        border-radius: 5px;
+        border: 2px solid var(--surface-sunken);
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background: var(--color-brand-primary);
+    }
+}
+
+/* ==========================================================================
+   MASTER CLASSES (Component Abstractions)
+   Implementation: @apply using Token References
+   ========================================================================== */
+
+@layer components {
+    /* --- LINKS --- */
+    /* Hover para links normales (excluye botones) - debe tener menor especificidad que .btn-primary:hover */
+    a:not(.btn):hover {
+        background-color: var(--surface-hover) !important;
+    }
+
+    /* --- CARDS & SURFACES --- */
+    .surface-card {
+        @apply bg-[var(--surface-card)] text-[var(--text-main)] rounded-xl border border-[var(--border-subtle)] shadow-card;
+    }
+
+    /* --- BUTTONS --- */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-md font-semibold leading-6 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+        /* Focus Ring Global */
+        --tw-ring-color: var(--ring-focus);
+        @apply focus:ring-[var(--ring-focus)];
+    }
+
+    .btn-primary {
+        @apply bg-[var(--color-brand-primary)] text-[var(--color-brand-contrast)];
+    }
+    
+    /* Asegurar que link buttons tengan los mismos estilos base que button buttons */
+    a.btn-primary {
+        background-color: var(--color-brand-primary) !important;
+        color: var(--color-brand-contrast) !important;
+    }
+    
+    /* Hover para btn-primary - DEBE estar después de a:not(.btn):hover y tener mayor especificidad */
+    /* Esto asegura que link buttons usen hover de botón, no de link */
+    a.btn-primary:hover,
+    .btn-primary:hover {
+        background-color: var(--color-brand-hover) !important;
+    }
+
+    .btn-secondary {
+        @apply bg-[var(--action-neutral-bg)] text-[var(--action-neutral-text)] border border-[var(--action-neutral-border)] hover:bg-[var(--action-neutral-hover)];
+    }
+
+    .btn-ghost {
+        @apply bg-transparent text-[var(--color-brand-primary)] hover:bg-[var(--surface-hover)];
+    }
+
+    .btn-danger {
+        @apply bg-[var(--signal-danger-main)] text-white hover:bg-[var(--color-brand-active)];
+        /* Fix logic: danger hover usually darkens the red */
+    }
+
+    /* Fix Danger Hover manually since we didn't map danger-hover token */
+    .btn-danger:hover {
+        filter: brightness(0.9);
+    }
+
+    /* --- FORMS --- */
+    .input-field {
+        @apply block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 bg-[var(--surface-card)] text-[var(--text-main)] ring-[var(--border-strong)] placeholder:text-[var(--text-muted)];
+    }
+
+    .input-field:focus {
+        @apply ring-[var(--ring-focus)];
+    }
+
+    .input-field-error {
+        @apply ring-[var(--signal-danger-main)] text-[var(--signal-danger-main)];
+    }
+
+    /* --- TYPOGRAPHY --- */
+    .text-brand {
+        color: var(--color-brand-primary);
+    }
+
+    .text-subtle {
+        color: var(--text-muted);
+    }
+
+    .text-error {
+        color: var(--signal-danger-main);
+    }
+
+}

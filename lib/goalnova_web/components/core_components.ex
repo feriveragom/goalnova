@@ -673,4 +673,199 @@ defmodule GoalnovaWeb.CoreComponents do
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
+
+
+  @doc """
+  Renders a reusable dropdown menu component.
+
+  ## Examples
+
+      <.dropdown id="profile-menu">
+        <:trigger :let={dropdown}>
+          <button phx-click={JS.toggle(to: "#profile-menu-dropdown")}>
+            Click me
+          </button>
+        </:trigger>
+        <:header>
+          <p>User info</p>
+        </:header>
+        <:item navigate="/profile" icon="hero-user">
+          Mi Perfil
+        </:item>
+        <:item navigate="/admin" icon="hero-cog-6-tooth">
+          Administración
+        </:item>
+        <%!-- Logout es ruta interna NO LiveView (controller), requiere href con redirect --%>
+        <:item href="/auth/logout" data-phx-link="redirect" icon="hero-arrow-right-on-rectangle" class="text-[var(--signal-danger-main)]">
+          Cerrar Sesión
+        </:item>
+      </.dropdown>
+
+  The trigger slot receives a map with `dropdown_id` that should be used in the phx-click.
+  The dropdown_id format is: `{id}-dropdown` where `{id}` is the id attribute passed to the component.
+  """
+  attr :id, :string, required: true, doc: "Unique ID for the dropdown"
+  attr :position, :string, default: "right", values: ~w(left right), doc: "Dropdown position"
+  attr :width, :string, default: "w-64", doc: "Width of the dropdown"
+  slot :trigger, required: true, doc: "Button or element that triggers the dropdown"
+  slot :header, doc: "Optional header section at the top of the dropdown"
+  slot :item, doc: "Menu items" do
+    attr :navigate, :string
+    attr :href, :string
+    attr :icon, :string
+    attr :class, :string
+  end
+
+  def dropdown(assigns) do
+    dropdown_id = "#{@id}-dropdown"
+
+    ~H"""
+    <div class="relative" id={@id}>
+      <%= render_slot(@trigger, %{dropdown_id: dropdown_id}) %>
+
+      <div
+        id={dropdown_id}
+        class={[
+          "hidden absolute #{@position}-0 mt-2 #{@width} rounded-xl surface-card py-2 shadow-popover ring-1 ring-[var(--border-subtle)] z-50"
+        ]}
+        phx-click-away={JS.hide(to: "##{dropdown_id}")}
+        phx-window-keydown={JS.hide(to: "##{dropdown_id}")}
+        phx-key="escape"
+      >
+        <div :if={@header != []} class="px-4 py-3 border-b border-[var(--border-subtle)]">
+          <%= render_slot(@header) %>
+        </div>
+
+        <div :if={@item != []}>
+          <%= for item <- @item do %>
+            <% item_class = Map.get(item, :class, "") %>
+            <%= if item[:navigate] do %>
+              <.link
+                navigate={item[:navigate]}
+                phx-click={JS.hide(to: "##{dropdown_id}")}
+                class={[
+                  "flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-main)] hover:bg-[var(--surface-hover)] transition-colors",
+                  item_class
+                ]}
+              >
+                <.svg :if={item[:icon]} name={item[:icon]} class="w-5 h-5 text-subtle" />
+                <%= render_slot(item) %>
+              </.link>
+            <% else %>
+              <.link
+                href={item[:href]}
+                data-phx-link={Map.get(item, :"data-phx-link", "redirect")}
+                phx-click={JS.hide(to: "##{dropdown_id}")}
+                class={[
+                  "flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-main)] hover:bg-[var(--surface-hover)] transition-colors",
+                  item_class
+                ]}
+              >
+                <.svg :if={item[:icon]} name={item[:icon]} class="w-5 h-5 text-subtle" />
+                <%= render_slot(item) %>
+              </.link>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+    Componente que renderiza iconos en formato SVG.
+  """
+  attr :name, :string,
+  required: true,
+  doc: """
+    Nombre del icono.
+    Es un atributo requerido.
+    Para iconos desde `Heroicon`, se debe especificar en el nombre el prefijo `hero-`. Por defecto, se utiliza el sufijo `-outline`, pero puedes agregar `-solid` y `-mini`.
+  """,
+  examples: [
+    "hero-x-mark-solid",
+    "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600",
+    "b0ce023f-8eac-4b0b-a6e3-7d769b762b64"
+  ]
+
+  attr :type, :string,
+    default: "local",
+    values: ~w(local url uniqueid),
+    doc: """
+      Define la forma de obtener el icono.
+      Por defecto se usa, `local`
+      -`local` indica que se buscará el icono alojado en el servidor en la ruta `priv/static/svg`
+      -`url` indica que se obtiene el icono desde una ruta
+      -`uniqueid` indica que se buscará el contenido del icono en Alberto.
+    """
+
+  attr :class, :any,
+    default: "",
+    doc: "Agrega clases CSS, acepta valores en forma de lista o como cadena"
+
+  attr :rest, :global
+
+  def svg(%{name: "hero-" <> _} = assigns), do: ~H"<span class={[@name, @class]} {@rest} />"
+  def svg(%{:type => "url"} = assigns), do: ~H"<img src={@name} class={@class} {@rest} />"
+  def svg(assigns), do: ~H"<%= svg_path(assigns) %>"
+
+  defp svg_path(%{type: "uniqueid", name: name, class: class}) do
+    {:safe,
+    cond do
+      not String.valid?(name) ->
+        "<img class=#{css_class(class)} src=\"#{content(name) |> extmake()}\" />"
+
+      true ->
+        name
+        |> content()
+        |> Floki.attr("svg", "class", fn _ -> css_class(class) end)
+        |> Floki.raw_html()
+    end}
+  end
+
+  defp svg_path(%{:name => name} = assigns) do
+    {:safe,
+    System.fetch_env!("APP_NAME")
+    |> String.to_atom()
+    |> Application.app_dir("priv/static/svg/#{name}.svg")
+    |> File.read()
+    |> loadsvg
+    |> Floki.parse_fragment()
+    |> insert_class(get_in(assigns, [Access.key(:class, [])]))}
+  end
+
+  defp insert_class({:error, html}, _), do: raise("No se puede parsear el html\n#{html}")
+
+  defp insert_class({:ok, html}, class) when is_nil(class) or class == [],
+    do: Floki.raw_html(html)
+
+  defp insert_class({:ok, html}, class) do
+    Floki.attr(html, "svg", "class", fn _ -> css_class(class) end)
+    |> Floki.raw_html()
+  end
+
+  defp loadsvg({:ok, result}), do: String.trim(result)
+
+  defp loadsvg(_),
+    do: "<svg class='h-5 w-20'><text x='0' y='15' fill='red'>Not Found</text></svg>"
+
+  # Capturando extension
+  defp extmake(<<0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, _::binary>> = val),
+    do: "data:image/png;base64,#{Base.encode64(val)}"
+
+  defp extmake(<<0xFF, 0xD8, _::binary>> = val),
+    do: "data:image/jpeg;base64,#{Base.encode64(val)}"
+
+  defp extmake(_val), do: ""
+
+  # Leer contenido de alberto
+  def content(unique_id) when is_binary(unique_id),
+    do: Firmadox.Alberto.NodeService.nodecontent_m(unique_id) |> content()
+
+  def content({:ok, info}), do: info
+  def content(_ignore), do: ""
+
+  def css_class(class) when is_list(class), do: Enum.join(class, " ")
+  def css_class(class) when is_binary(class), do: class
+  def css_class(_class), do: ""
 end

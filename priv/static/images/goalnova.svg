@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- GoalNova Logo - Con fondo morado para mejor contraste -->
+  
+  <defs>
+    <!-- Gradiente morado oscuro -->
+    <linearGradient id="darkPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b1f6e;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#4e2a8e;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Gradiente rosa/lila -->
+    <linearGradient id="pinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d499ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#b77dff;stop-opacity:1"/>
+    </linearGradient>
+    
+    <!-- Gradiente de fondo -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#4e2a8e;stop-opacity:0.95"/>
+      <stop offset="100%" style="stop-color:#3b1f6e;stop-opacity:1"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Fondo circular morado -->
+  <circle cx="256" cy="256" r="256" fill="none"/>
+  
+  <!-- Círculo exterior completo -->
+  <circle cx="256" cy="256" r="200" stroke="url(#pinkGrad)" stroke-width="6" fill="transparent" opacity="0.6"/>
+  
+  <!-- Arco superior morado (desde izquierda hacia arriba derecha) -->
+  <path d="M 80 256 A 200 200 0 0 1 380 130" stroke="#d499ff" stroke-width="16" fill="transparent" stroke-linecap="round" opacity="0.9"/>
+  
+  <!-- Arco interior rosa/lila con curva suave -->
+  <path d="M 150 280 Q 200 200, 280 180 T 340 200" stroke="url(#pinkGrad)" stroke-width="20" fill="transparent" stroke-linecap="round" opacity="0.95"/>
+  
+  <!-- Círculo en el extremo del arco rosa -->
+  <circle cx="340" cy="200" r="18" fill="url(#bgGrad)" opacity="0.9"/>
+  <circle cx="340" cy="200" r="12" fill="#f0d4ff"/>
+  
+  <!-- Partículas/estrellas superiores derechas -->
+  <circle cx="400" cy="140" r="5" fill="url(#bgGrad)" opacity="0.8"/>
+  <circle cx="390" cy="120" r="4" fill="url(#bgGrad)" opacity="0.7"/>
+  <circle cx="410" cy="160" r="6" fill="url(#bgGrad)" opacity="0.9"/>
+  
+  <!-- Texto "GoalNova" con estilo bold -->
+  <text x="256" y="330" font-family="'Arial Black', Arial, sans-serif" font-size="68" font-weight="900" text-anchor="middle" letter-spacing="0">
+    <tspan fill="url(#bgGrad)">Goal</tspan><tspan fill="#d499ff">Nova</tspan>
+  </text>
+  
+  <!-- Subtítulo "Un Nuevo Alcance" -->
+  <text x="256" y="370" font-family="Arial, sans-serif" font-size="26" font-weight="400" text-anchor="middle" fill="url(#pinkGrad)" opacity="0.85" letter-spacing="0.5">
+    Un Nuevo Alcance
+  </text>
+</svg>

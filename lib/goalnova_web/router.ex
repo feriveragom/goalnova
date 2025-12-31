@@ -17,7 +17,10 @@ defmodule GoalnovaWeb.Router do
   scope "/", GoalnovaWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive.Index, :index
+    live "/profile", ProfileLive.Index, :index
+    live "/admin", AdminLive.Index, :index
+    live "/demo", DemoLive.Index, :index
   end
 
   # Other scopes may use custom stacks.

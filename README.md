@@ -11,7 +11,7 @@ mix phx.new . --no-install --adapter bandit
 - `--no-install` - No instala dependencias (solo crea la estructura)
 - `--adapter bandit` - Usa Bandit como servidor HTTP (según nuestro stack)
 
-# Verificar que funciona
+## Verificar que funciona
 
 ```bash
 mix deps
@@ -19,11 +19,11 @@ mix deps
 
 Esto mostrará las dependencias definidas sin instalarlas.
 
-# Configurar proyecto para no usar base de datos aún
+## Configurar proyecto para no usar base de datos aún
 
 Después de crear el proyecto con `mix phx.new`, necesitas configurarlo para que NO intente conectarse a la base de datos. Las dependencias pueden quedarse en `mix.exs`, pero debes evitar que se inicien o configuren.
 
-## 1. Comentar en `lib/goalnova/application.ex`
+### 1. Comentar en `lib/goalnova/application.ex`
 
 Comenta estas líneas en la lista de `children` para que no se inicien:
 
@@ -41,7 +41,7 @@ def start(_type, _args) do
 end
 ```
 
-## 2. Comentar en `config/config.exs`
+### 2. Comentar en `config/config.exs`
 
 Comenta la línea de `ecto_repos`:
 
@@ -51,7 +51,7 @@ config :goalnova,
   generators: [timestamp_type: :utc_datetime]
 ```
 
-## 3. Comentar en `config/dev.exs`
+### 3. Comentar en `config/dev.exs`
 
 Comenta toda la configuración de la base de datos:
 
@@ -67,9 +67,9 @@ Comenta toda la configuración de la base de datos:
 #   pool_size: 10
 ```
 
-## 4. Actualizar dependencias en `mix.exs`
+### 4. Actualizar dependencias en `mix.exs`
 
-### Agregar dependencia
+#### Agregar dependencia
 
 Agrega `timex` a la lista de dependencias:
 
@@ -82,7 +82,7 @@ defp deps do
 end
 ```
 
-### Comentar dependencias (opcional)
+#### Comentar dependencias (opcional)
 
 Si no vas a usar el mailer, puedes comentar estas dependencias en `mix.exs`:
 
@@ -98,11 +98,11 @@ end
 
 **Nota:** Las dependencias de base de datos (phoenix_ecto, postgrex) y dns_cluster pueden quedarse en `mix.exs`. Solo evita que se inicien o configuren comentando las líneas en `application.ex` y archivos de configuración mencionadas arriba.
 
-## 5. Comentar configuración del mailer
+### 5. Comentar configuración del mailer
 
 Si comentaste `swoosh` y `finch` en `mix.exs`, también debes comentar las referencias al mailer en los archivos de configuración y en el módulo:
 
-### 5.1. Comentar en `lib/goalnova/mailer.ex`
+#### 5.1. Comentar en `lib/goalnova/mailer.ex`
 
 Comenta la línea que usa `Swoosh.Mailer`:
 
@@ -112,7 +112,7 @@ defmodule Goalnova.Mailer do
 end
 ```
 
-### 5.2. Comentar en `config/config.exs`
+#### 5.2. Comentar en `config/config.exs`
 
 Comenta la configuración del mailer (línea 32 aproximadamente):
 
@@ -122,7 +122,7 @@ Comenta la configuración del mailer (línea 32 aproximadamente):
 # config :goalnova, Goalnova.Mailer, adapter: Swoosh.Adapters.Local
 ```
 
-### 5.3. Comentar en `config/test.exs`
+#### 5.3. Comentar en `config/test.exs`
 
 Comenta las dos líneas relacionadas con el mailer (líneas 24 y 27 aproximadamente):
 
@@ -136,7 +136,7 @@ Comenta las dos líneas relacionadas con el mailer (líneas 24 y 27 aproximadame
 
 **Nota:** Si no comentas estas líneas, Elixir intentará compilar `Goalnova.Mailer` y fallará porque `Swoosh` no está disponible.
 
-# Variables de entorno para desarrollo
+## Variables de entorno para desarrollo
 
 **Todas las variables de entorno para desarrollo se configuran en `start_dev.sh`.**
 
@@ -158,3 +158,7 @@ Para iniciar el servidor, ejecuta:
 ./start_dev.sh
 sh start_dev.sh 
 ```
+
+---
+
+# Incrementos a: proyecto Phoenix desde cero
