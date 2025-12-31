@@ -872,6 +872,16 @@ defmodule GoalnovaWeb.CoreComponents do
   - `:ghost` - Tertiary actions, minimal style (cancel, dismiss)
   - `:danger` - Destructive actions (delete, remove)
 
+  ## States
+
+  - `loading` - Shows loading spinner and disables interaction
+  - `disabled` - Disables the button (native HTML disabled attribute)
+
+  ## Accessibility
+
+  - `aria_label` - Accessible label for screen readers
+  - `aria_disabled` - Indicates disabled state to assistive technologies
+
   ## Examples
 
       <.button>Save</.button>
@@ -880,44 +890,98 @@ defmodule GoalnovaWeb.CoreComponents do
       <.button variant="ghost">Dismiss</.button>
       <.button navigate="/profile">Mi Perfil</.button>
       <.button href="https://hexdocs.pm/elixir">External Docs</.button>
+      <.button loading>Loading...</.button>
+      <.button disabled>Disabled</.button>
+      <.button aria_label="Save document" phx-click="save">Save</.button>
   """
-  attr :type, :string, default: nil
-  attr :class, :string, default: nil
-
+  attr :type, :string, default: "button", doc: "Button type (button, submit, reset)"
+  attr :class, :string, default: nil, doc: "Additional CSS classes"
   attr :variant, :string,
     default: "primary",
     values: ~w(primary secondary ghost danger),
     doc: "Button style variant"
-
   attr :size, :string,
     default: "default",
     values: ~w(sm default lg),
     doc: "Button size"
-
   attr :navigate, :string,
     doc: "INTERNAL navigation only - Routes within the application (e.g., \"/\", \"/profile\"). Uses patch navigation (no page reload)."
-
   attr :href, :string,
     doc: "EXTERNAL navigation only - External URLs starting with http:// or https://. Uses redirect navigation (page reload)."
-
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr :loading, :boolean, default: false, doc: "Shows loading state with spinner"
+  attr :disabled, :boolean, default: false, doc: "Disables the button"
+  attr :aria_label, :string, default: nil, doc: "Accessible label for screen readers"
+  attr :aria_disabled, :boolean, default: false, doc: "Indicates disabled state to assistive technologies"
+  attr :rest, :global, include: ~w(form name value)
 
   slot :inner_block, required: true
 
   def button(assigns) do
-    button_classes = [
-      "btn",
-      # Size variants
-      assigns.size == "sm" && "px-2.5 py-0.5 text-xs",
-      assigns.size == "default" && "px-3 py-1 text-sm",
-      assigns.size == "lg" && "px-4 py-1.5 text-base",
-      # Style variants mapped to Master Classes
-      assigns.variant == "primary" && "btn-primary",
-      assigns.variant == "secondary" && "btn-secondary",
-      assigns.variant == "ghost" && "btn-ghost",
-      assigns.variant == "danger" && "btn-danger",
-      assigns.class
-    ]
+    # Validate mutually exclusive attributes
+    if assigns[:navigate] && assigns[:href] do
+      raise ArgumentError,
+            "Cannot use both 'navigate' and 'href' attributes. Use 'navigate' for internal routes and 'href' for external URLs."
+    end
+
+    # Validate href is external URL
+    if assigns[:href] && not String.starts_with?(assigns.href, ["http://", "https://"]) do
+      raise ArgumentError,
+            "The 'href' attribute must be an external URL starting with http:// or https://. For internal routes, use 'navigate' instead."
+    end
+
+    # Determine if button should be disabled
+    is_disabled = assigns.disabled || assigns.loading
+
+    # Build button classes (filter out false values)
+    button_classes =
+      [
+        "btn",
+        # Size variants
+        assigns.size == "sm" && "px-2.5 py-0.5 text-xs",
+        assigns.size == "default" && "px-3 py-1 text-sm",
+        assigns.size == "lg" && "px-4 py-1.5 text-base",
+        # Style variants mapped to Master Classes
+        assigns.variant == "primary" && "btn-primary",
+        assigns.variant == "secondary" && "btn-secondary",
+        assigns.variant == "ghost" && "btn-ghost",
+        assigns.variant == "danger" && "btn-danger",
+        # Loading state
+        assigns.loading && "opacity-75 cursor-not-allowed",
+        # Disabled state
+        is_disabled && "opacity-50 cursor-not-allowed",
+        assigns.class
+      ]
+      |> Enum.filter(& &1)
+
+    # Build aria attributes
+    aria_attrs =
+      []
+      |> then(fn attrs ->
+        if assigns.aria_label, do: [{"aria-label", assigns.aria_label} | attrs], else: attrs
+      end)
+      |> then(fn attrs ->
+        if assigns.aria_disabled || is_disabled, do: [{"aria-disabled", "true"} | attrs], else: attrs
+      end)
+      |> Map.new()
+
+    # Build rest attributes (excluding disabled if it's a link)
+    rest_attrs =
+      assigns.rest
+      |> Map.merge(aria_attrs)
+      |> then(fn attrs ->
+        if assigns[:navigate] || assigns[:href] do
+          # For links, don't use disabled attribute (use aria-disabled instead)
+          Map.drop(attrs, [:disabled])
+        else
+          # For buttons, include disabled attribute
+          if is_disabled, do: Map.put(attrs, :disabled, true), else: attrs
+        end
+      end)
+
+    # Assign rest_attrs to socket for use in template
+    assigns = assign(assigns, :rest_attrs, rest_attrs)
+    assigns = assign(assigns, :button_classes, button_classes)
+    assigns = assign(assigns, :is_disabled, is_disabled)
 
     # If navigate or href is provided, render as link button
     cond do
@@ -925,9 +989,16 @@ defmodule GoalnovaWeb.CoreComponents do
         ~H"""
         <.link
           navigate={@navigate}
-          class={button_classes}
-          {@rest}
+          class={@button_classes}
+          aria-disabled={if @is_disabled, do: "true"}
+          tabindex={if @is_disabled, do: "-1"}
+          {@rest_attrs}
         >
+          <%= if @loading do %>
+            <span class="inline-block animate-spin mr-2">
+              <.svg name="hero-arrow-path" class="h-4 w-4" />
+            </span>
+          <% end %>
           <%= render_slot(@inner_block) %>
         </.link>
         """
@@ -936,9 +1007,16 @@ defmodule GoalnovaWeb.CoreComponents do
         ~H"""
         <.link
           href={@href}
-          class={button_classes}
-          {@rest}
+          class={@button_classes}
+          aria-disabled={if @is_disabled, do: "true"}
+          tabindex={if @is_disabled, do: "-1"}
+          {@rest_attrs}
         >
+          <%= if @loading do %>
+            <span class="inline-block animate-spin mr-2">
+              <.svg name="hero-arrow-path" class="h-4 w-4" />
+            </span>
+          <% end %>
           <%= render_slot(@inner_block) %>
         </.link>
         """
@@ -946,10 +1024,16 @@ defmodule GoalnovaWeb.CoreComponents do
       true ->
         ~H"""
         <button
-          type={@type || "button"}
-          class={button_classes}
-          {@rest}
+          type={@type}
+          class={@button_classes}
+          disabled={@is_disabled}
+          {@rest_attrs}
         >
+          <%= if @loading do %>
+            <span class="inline-block animate-spin mr-2">
+              <.svg name="hero-arrow-path" class="h-4 w-4" />
+            </span>
+          <% end %>
           <%= render_slot(@inner_block) %>
         </button>
         """
