@@ -1,0 +1,78 @@
+<div class="space-y-4 sm:space-y-6">
+  <h1 class="text-2xl sm:text-3xl font-bold text-[var(--text-main)]">Demo UI</h1>
+
+  <%!-- Tabs Navigation - Mobile First --%>
+  <div class="border-b border-[var(--border-subtle)]">
+    <nav class="-mb-px flex flex-wrap gap-x-4 sm:gap-x-8 gap-y-2" aria-label="Tabs">
+      <button
+        phx-click="switch_tab"
+        phx-value-tab="desktop"
+        class={[
+          "whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors",
+          if(@active_tab == "desktop",
+            do: "border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]",
+            else: "border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+          )
+        ]}
+      >
+        Desktop
+      </button>
+      <button
+        phx-click="switch_tab"
+        phx-value-tab="desktop_forms"
+        class={[
+          "whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors",
+          if(@active_tab == "desktop_forms",
+            do: "border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]",
+            else: "border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+          )
+        ]}
+      >
+        Desktop Forms
+      </button>
+      <button
+        phx-click="switch_tab"
+        phx-value-tab="mobile"
+        class={[
+          "whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors",
+          if(@active_tab == "mobile",
+            do: "border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]",
+            else: "border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+          )
+        ]}
+      >
+        Mobile
+      </button>
+      <button
+        phx-click="switch_tab"
+        phx-value-tab="mobile_forms"
+        class={[
+          "whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors",
+          if(@active_tab == "mobile_forms",
+            do: "border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]",
+            else: "border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+          )
+        ]}
+      >
+        Mobile Forms
+      </button>
+    </nav>
+  </div>
+
+  <%!-- Tab Content --%>
+  <div class="mt-4 sm:mt-6">
+    <div :if={@active_tab == "desktop"}>
+      <GoalnovaWeb.Components.Demo.AppUiDesktop.app_ui_desktop />
+    </div>
+    <div :if={@active_tab == "desktop_forms"}>
+      <GoalnovaWeb.Components.Demo.AppUiDesktopForms.app_ui_desktop_forms />
+    </div>
+    <div :if={@active_tab == "mobile"}>
+      <GoalnovaWeb.Components.Demo.AppUiMobile.app_ui_mobile />
+    </div>
+    <div :if={@active_tab == "mobile_forms"}>
+      <GoalnovaWeb.Components.Demo.AppUiMobileForms.app_ui_mobile_forms />
+    </div>
+  </div>
+</div>
+

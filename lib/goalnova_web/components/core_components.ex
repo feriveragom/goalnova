@@ -212,35 +212,6 @@ defmodule GoalnovaWeb.CoreComponents do
     """
   end
 
-  @doc """
-  Renders a button.
-
-  ## Examples
-
-      <.button>Send!</.button>
-      <.button phx-click="go" class="ml-2">Send!</.button>
-  """
-  attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
-
-  slot :inner_block, required: true
-
-  def button(assigns) do
-    ~H"""
-    <button
-      type={@type}
-      class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
-        @class
-      ]}
-      {@rest}
-    >
-      <%= render_slot(@inner_block) %>
-    </button>
-    """
-  end
 
   @doc """
   Renders an input with label and error messages.
@@ -868,4 +839,153 @@ defmodule GoalnovaWeb.CoreComponents do
   def css_class(class) when is_list(class), do: Enum.join(class, " ")
   def css_class(class) when is_binary(class), do: class
   def css_class(_class), do: ""
+
+
+  @doc """
+  Renders a button with variant support.
+
+  If `navigate` or `href` is provided, renders as a link button (for navigation).
+  Otherwise, renders as a regular button (for actions).
+
+  ## Navigation Rules (RIGID - NO EXCEPTIONS)
+
+  **CRITICAL:** There is a strict, non-negotiable rule for navigation attributes:
+
+  - **`navigate`** → **INTERNAL navigation only** (within the application)
+    - Routes within the LiveView application (e.g., `"/"`, `"/profile"`, `~p"/users"`)
+    - Uses `patch` navigation (NO page reload, socket stays connected)
+    - Example: `<.button navigate="/">Home</.button>`
+
+  - **`href`** → **EXTERNAL navigation only** (outside the application)
+    - External URLs starting with `http://` or `https://`
+    - Uses `redirect` navigation (page reload, new socket connection)
+    - Example: `<.button href="https://example.com">External</.button>`
+
+  **DO NOT:**
+  - Use `href` for internal routes (e.g., `href="/"` is WRONG)
+  - Use `navigate` for external URLs (e.g., `navigate="https://..."` is WRONG)
+
+  ## Variants
+
+  - `:primary` (default) - Main action, filled with primary color
+  - `:secondary` - Secondary actions, outlined style
+  - `:ghost` - Tertiary actions, minimal style (cancel, dismiss)
+  - `:danger` - Destructive actions (delete, remove)
+
+  ## Examples
+
+      <.button>Save</.button>
+      <.button variant="secondary">Cancel</.button>
+      <.button variant="danger" phx-click="delete">Delete</.button>
+      <.button variant="ghost">Dismiss</.button>
+      <.button navigate="/profile">Mi Perfil</.button>
+      <.button href="https://hexdocs.pm/elixir">External Docs</.button>
+  """
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+
+  attr :variant, :string,
+    default: "primary",
+    values: ~w(primary secondary ghost danger),
+    doc: "Button style variant"
+
+  attr :size, :string,
+    default: "default",
+    values: ~w(sm default lg),
+    doc: "Button size"
+
+  attr :navigate, :string,
+    doc: "INTERNAL navigation only - Routes within the application (e.g., \"/\", \"/profile\"). Uses patch navigation (no page reload)."
+
+  attr :href, :string,
+    doc: "EXTERNAL navigation only - External URLs starting with http:// or https://. Uses redirect navigation (page reload)."
+
+  attr :rest, :global, include: ~w(disabled form name value)
+
+  slot :inner_block, required: true
+
+  def button(assigns) do
+    button_classes = [
+      "btn",
+      # Size variants
+      assigns.size == "sm" && "px-2.5 py-0.5 text-xs",
+      assigns.size == "default" && "px-3 py-1 text-sm",
+      assigns.size == "lg" && "px-4 py-1.5 text-base",
+      # Style variants mapped to Master Classes
+      assigns.variant == "primary" && "btn-primary",
+      assigns.variant == "secondary" && "btn-secondary",
+      assigns.variant == "ghost" && "btn-ghost",
+      assigns.variant == "danger" && "btn-danger",
+      assigns.class
+    ]
+
+    # If navigate or href is provided, render as link button
+    cond do
+      assigns[:navigate] ->
+        ~H"""
+        <.link
+          navigate={@navigate}
+          class={button_classes}
+          {@rest}
+        >
+          <%= render_slot(@inner_block) %>
+        </.link>
+        """
+
+      assigns[:href] ->
+        ~H"""
+        <.link
+          href={@href}
+          class={button_classes}
+          {@rest}
+        >
+          <%= render_slot(@inner_block) %>
+        </.link>
+        """
+
+      true ->
+        ~H"""
+        <button
+          type={@type || "button"}
+          class={button_classes}
+          {@rest}
+        >
+          <%= render_slot(@inner_block) %>
+        </button>
+        """
+    end
+  end
+
+  @doc """
+  Renders a demo section with title and description.
+
+  ## Examples
+
+      <.demo_section id="buttons" title="Buttons" description="All button variants">
+        <div>Button content here</div>
+      </.demo_section>
+  """
+  attr :id, :string, required: true, doc: "Unique ID for the section"
+  attr :title, :string, required: true, doc: "Section title"
+  attr :description, :string, required: true, doc: "Section description"
+  slot :inner_block, required: true
+
+  def demo_section(assigns) do
+    ~H"""
+    <div id={@id} class="space-y-4">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-semibold text-[var(--text-main)]">
+          <%= @title %>
+        </h2>
+        <p class="mt-1 text-sm text-subtle">
+          <%= @description %>
+        </p>
+      </div>
+      <div class="pt-4">
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
+    """
+  end
+
 end
