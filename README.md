@@ -98,6 +98,44 @@ end
 
 **Nota:** Las dependencias de base de datos (phoenix_ecto, postgrex) y dns_cluster pueden quedarse en `mix.exs`. Solo evita que se inicien o configuren comentando las líneas en `application.ex` y archivos de configuración mencionadas arriba.
 
+## 5. Comentar configuración del mailer
+
+Si comentaste `swoosh` y `finch` en `mix.exs`, también debes comentar las referencias al mailer en los archivos de configuración y en el módulo:
+
+### 5.1. Comentar en `lib/goalnova/mailer.ex`
+
+Comenta la línea que usa `Swoosh.Mailer`:
+
+```elixir
+defmodule Goalnova.Mailer do
+  # use Swoosh.Mailer, otp_app: :goalnova
+end
+```
+
+### 5.2. Comentar en `config/config.exs`
+
+Comenta la configuración del mailer (línea 32 aproximadamente):
+
+```elixir
+# Configures the mailer
+# ...
+# config :goalnova, Goalnova.Mailer, adapter: Swoosh.Adapters.Local
+```
+
+### 5.3. Comentar en `config/test.exs`
+
+Comenta las dos líneas relacionadas con el mailer (líneas 24 y 27 aproximadamente):
+
+```elixir
+# In test we don't send emails
+# config :goalnova, Goalnova.Mailer, adapter: Swoosh.Adapters.Test
+
+# Disable swoosh api client as it is only required for production adapters
+# config :swoosh, :api_client, false
+```
+
+**Nota:** Si no comentas estas líneas, Elixir intentará compilar `Goalnova.Mailer` y fallará porque `Swoosh` no está disponible.
+
 # Variables de entorno para desarrollo
 
 **Todas las variables de entorno para desarrollo se configuran en `start_dev.sh`.**
@@ -118,4 +156,5 @@ Para iniciar el servidor, ejecuta:
 
 ```bash
 ./start_dev.sh
+sh start_dev.sh 
 ```
