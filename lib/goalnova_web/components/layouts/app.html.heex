@@ -25,12 +25,12 @@
           </button>
 
           <%!-- Menú Perfil --%>
-          <.dropdown id="profile-menu">
+          <.dropdown id="profile-menu" position="right">
             <:trigger :let={dropdown}>
               <button
                 type="button"
                 class="flex items-center gap-2 rounded-full bg-[var(--color-brand-subtle)] p-1 pr-3 hover:bg-[var(--surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--ring-focus)] transition-all"
-                phx-click={JS.toggle(to: "##{dropdown.dropdown_id}")}
+                phx-click={dropdown.toggle_command}
               >
                 <%= if @current_user do %>
                   <%= if @current_user[:picture] do %>
@@ -57,22 +57,36 @@
                 <%= @current_user[:email] %>
               </p>
             </:header>
-            <:item navigate="/" icon="hero-squares-2x2">
-              <img src="/images/goalnova.svg" alt="GoalNova" class="w-8 h-8" />
-              <span class="font-medium">GoalNova</span>
+            <:item :let={assigns}>
+              <.link navigate="/" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                <img src="/images/goalnova.svg" alt="GoalNova" class="w-8 h-8" />
+                <span class="font-medium">GoalNova</span>
+              </.link>
             </:item>
-            <:item :if={@current_user} navigate="/profile" icon="hero-user">
-              Mi Perfil
+            <:item :if={@current_user} :let={assigns}>
+              <.link navigate="/profile" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                <.svg name="hero-user" class="w-5 h-5 text-subtle" />
+                Mi Perfil
+              </.link>
             </:item>
-            <:item :if={@current_user} navigate="/admin" icon="hero-cog-6-tooth">
-              Administración
+            <:item :if={@current_user} :let={assigns}>
+              <.link navigate="/admin" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                <.svg name="hero-cog-6-tooth" class="w-5 h-5 text-subtle" />
+                Administración
+              </.link>
             </:item>
             <%!-- Logout es ruta interna NO LiveView (controller), requiere redirect --%>
-            <:item :if={@current_user} href="/auth/logout" data-phx-link="redirect" icon="hero-arrow-right-on-rectangle" class="text-[var(--signal-danger-main)] hover:bg-[var(--signal-danger-subtle)]">
-              Cerrar Sesión
+            <:item :if={@current_user} :let={assigns}>
+              <.link href="/auth/logout" data-phx-link="redirect" phx-click={assigns.hide_command} class="w-full flex items-center gap-3 text-[var(--signal-danger-main)] hover:bg-[var(--signal-danger-subtle)]">
+                <.svg name="hero-arrow-right-on-rectangle" class="w-5 h-5 text-subtle" />
+                Cerrar Sesión
+              </.link>
             </:item>
-            <:item :if={!@current_user} navigate="/auth/login" icon="hero-arrow-left-on-rectangle" class="text-brand">
-              Iniciar Sesión
+            <:item :if={!@current_user} :let={assigns}>
+              <.link navigate="/auth/login" phx-click={assigns.hide_command} class="w-full flex items-center gap-3 text-brand">
+                <.svg name="hero-arrow-left-on-rectangle" class="w-5 h-5 text-subtle" />
+                Iniciar Sesión
+              </.link>
             </:item>
           </.dropdown>
         </div>

@@ -949,4 +949,93 @@
 
 ---
 
+## 7. DROPDOWN MENU
+
+El componente `.dropdown` permite crear menús desplegables. El slot `:item` recibe `hide_command` que debe usarse para cerrar el dropdown al hacer clic.
+
+### Uso Básico
+
+El slot `:item` permite pasar cualquier componente (`.link`, `.button`, etc.) directamente:
+
+```heex
+<.dropdown id="actions-menu">
+  <:trigger :let={dropdown}>
+    <button phx-click={dropdown.toggle_command}>Acciones</button>
+  </:trigger>
+  
+  <:item :let={hide_command}>
+    <.link navigate="/profile" phx-click={hide_command} class="w-full flex items-center gap-3">
+      <.svg name="hero-user" class="w-5 h-5 text-subtle" />
+      Mi Perfil
+    </.link>
+  </:item>
+  
+  <:item :let={hide_command}>
+    <.button phx-click={JS.push("download") |> hide_command} phx-value-format="pdf" variant="ghost" class="w-full justify-start">
+      <.svg name="hero-arrow-down-tray" class="w-5 h-5 text-subtle" />
+      Descargar PDF
+    </.button>
+  </:item>
+</.dropdown>
+```
+
+### Reglas Importantes
+
+1. **Siempre usar `hide_command`**: El slot `:item` recibe `hide_command` que debe combinarse con el `phx-click` del componente para cerrar el dropdown automáticamente.
+
+2. **Usar componentes existentes**: Pasa `.link` o `.button` directamente dentro del slot `:item`, no uses atributos del slot.
+
+3. **Estilos del wrapper**: El wrapper del item ya incluye padding, hover y transiciones. Los componentes internos deben usar `w-full` para ocupar todo el ancho.
+
+4. **Iconos**: Los iconos deben incluirse dentro del componente (`.link` o `.button`), no como atributos del slot.
+
+### Ejemplos Comunes
+
+#### Navegación Interna (navigate)
+```heex
+<:item :let={hide_command}>
+  <.link navigate="/profile" phx-click={hide_command} class="w-full flex items-center gap-3">
+    <.svg name="hero-user" class="w-5 h-5 text-subtle" />
+    Mi Perfil
+  </.link>
+</:item>
+```
+
+#### Navegación Externa (href)
+```heex
+<:item :let={hide_command}>
+  <.link href="/auth/logout" data-phx-link="redirect" phx-click={hide_command} class="w-full flex items-center gap-3 text-[var(--signal-danger-main)]">
+    <.svg name="hero-arrow-right-on-rectangle" class="w-5 h-5 text-subtle" />
+    Cerrar Sesión
+  </.link>
+</:item>
+```
+
+#### Acción con Evento (phx-click)
+```heex
+<:item :let={hide_command}>
+  <.button phx-click={JS.push("download") |> hide_command} phx-value-format="pdf" variant="ghost" class="w-full justify-start">
+    <.svg name="hero-arrow-down-tray" class="w-5 h-5 text-subtle" />
+    Descargar PDF
+  </.button>
+</:item>
+```
+
+#### Acción con Múltiples Valores
+```heex
+<:item :let={hide_command}>
+  <.button phx-click={JS.push("export") |> hide_command} phx-value-format="csv" phx-value-date="2024-01-01" variant="ghost" class="w-full justify-start">
+    <.svg name="hero-arrow-down-tray" class="w-5 h-5 text-subtle" />
+    Exportar CSV
+  </.button>
+</:item>
+```
+
+### Clases Recomendadas
+
+- **Para `.link`**: `class="w-full flex items-center gap-3"` (ajusta según necesites)
+- **Para `.button`**: `class="w-full justify-start"` (para alinear contenido a la izquierda)
+
+---
+
 # ...

@@ -1,108 +1,394 @@
-<div class="space-y-16">
-  <%!-- Section: Primary Button --%>
-  <.demo_section id="button-primary" title="Primary Button" description="Botón de acción principal - todas las variantes y estados">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
-        <.svg name="hero-plus-mini" class="h-4 w-4" />
-      </.button>
-      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">Default</.button>
-      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
-        <.svg name="hero-plus-mini" class="h-4 w-4" />
-        Default
-      </.button>
-      <.button navigate="/" variant="primary">Link (navigate)</.button>
-      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="primary" target="_blank">Link (href)</.button>
-      <.button variant="primary" loading>Loading...</.button>
-      <.button variant="primary" disabled>Disabled</.button>
-    </div>
-  </.demo_section>
+<div id="app-ui-actions-tabs" class="space-y-6" phx-hook="ComponentTabs">
+  <%!-- Internal Tabs Navigation --%>
+  <div class="border-b border-[var(--border-subtle)]">
+    <nav class="-mb-px flex flex-wrap gap-x-4 sm:gap-x-8 gap-y-2" aria-label="Component Tabs">
+      <button
+        type="button"
+        data-tab="button"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-[var(--color-brand-primary)] text-[var(--color-brand-primary)]"
+      >
+        Button
+      </button>
+      <button
+        type="button"
+        data-tab="link"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+      >
+        Link
+      </button>
+      <button
+        type="button"
+        data-tab="dropdown"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+      >
+        Dropdown
+      </button>
+      <button
+        type="button"
+        data-tab="select"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+      >
+        Select
+      </button>
+      <button
+        type="button"
+        data-tab="input"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+      >
+        Input
+      </button>
+      <button
+        type="button"
+        data-tab="modal"
+        class="tab-button whitespace-nowrap border-b-2 py-3 sm:py-4 px-1 text-xs sm:text-sm font-medium transition-colors border-transparent text-subtle hover:border-[var(--border-subtle)] hover:text-[var(--text-main)]"
+      >
+        Modal
+      </button>
+    </nav>
+  </div>
 
-  <%!-- Section: Secondary Button --%>
-  <.demo_section id="button-secondary" title="Secondary Button" description="Botón de acción secundaria - todas las variantes y estados">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
-        <.svg name="hero-pencil-mini" class="h-4 w-4" />
-      </.button>
-      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">Default</.button>
-      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
-        <.svg name="hero-pencil-mini" class="h-4 w-4" />
-        Default
-      </.button>
-      <.button navigate="/" variant="secondary">Link (navigate)</.button>
-      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="secondary" target="_blank">Link (href)</.button>
-      <.button variant="secondary" loading>Loading...</.button>
-      <.button variant="secondary" disabled>Disabled</.button>
-    </div>
-  </.demo_section>
+  <%!-- Tab Content --%>
+  <div class="mt-4 sm:mt-6">
+    <%!-- Button Tab --%>
+    <div data-tab-content="button" class="tab-content">
+      <div class="space-y-16">
+        <%!-- Section: Primary Button --%>
+        <.demo_section id="button-primary" title="Primary Button" description="Botón de acción principal - todas las variantes y estados">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
+              <.svg name="hero-plus-mini" class="h-4 w-4" />
+            </.button>
+            <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">Default</.button>
+            <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
+              <.svg name="hero-plus-mini" class="h-4 w-4" />
+              Default
+            </.button>
+            <.button navigate="/" variant="primary">Link (navigate)</.button>
+            <.button href="https://hexdocs.pm/elixir/introduction.html" variant="primary" target="_blank">Link (href)</.button>
+            <.button variant="primary" loading>Loading...</.button>
+            <.button variant="primary" disabled>Disabled</.button>
+          </div>
+        </.demo_section>
 
-  <%!-- Section: Ghost Button --%>
-  <.demo_section id="button-ghost" title="Ghost Button" description="Botón de acción terciaria - todas las variantes y estados">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
-        <.svg name="hero-moon" class="h-4 w-4" />
-      </.button>
-      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">Default</.button>
-      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
-        <.svg name="hero-moon" class="h-4 w-4" />
-        Default
-      </.button>
-      <.button navigate="/" variant="ghost">Link (navigate)</.button>
-      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="ghost" target="_blank">Link (href)</.button>
-      <.button variant="ghost" loading>Loading...</.button>
-      <.button variant="ghost" disabled>Disabled</.button>
-    </div>
-  </.demo_section>
+        <%!-- Section: Secondary Button --%>
+        <.demo_section id="button-secondary" title="Secondary Button" description="Botón de acción secundaria - todas las variantes y estados">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
+              <.svg name="hero-pencil-mini" class="h-4 w-4" />
+            </.button>
+            <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">Default</.button>
+            <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
+              <.svg name="hero-pencil-mini" class="h-4 w-4" />
+              Default
+            </.button>
+            <.button navigate="/" variant="secondary">Link (navigate)</.button>
+            <.button href="https://hexdocs.pm/elixir/introduction.html" variant="secondary" target="_blank">Link (href)</.button>
+            <.button variant="secondary" loading>Loading...</.button>
+            <.button variant="secondary" disabled>Disabled</.button>
+          </div>
+        </.demo_section>
 
-  <%!-- Section: Danger Button --%>
-  <.demo_section id="button-danger" title="Danger Button" description="Botón de acción destructiva - todas las variantes y estados">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
-        <.svg name="hero-trash-mini" class="h-4 w-4" />
-      </.button>
-      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">Default</.button>
-      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
-        <.svg name="hero-trash-mini" class="h-4 w-4" />
-        Default
-      </.button>
-      <.button navigate="/" variant="danger">Link (navigate)</.button>
-      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="danger" target="_blank">Link (href)</.button>
-      <.button variant="danger" loading>Loading...</.button>
-      <.button variant="danger" disabled>Disabled</.button>
-    </div>
-  </.demo_section>
+        <%!-- Section: Ghost Button --%>
+        <.demo_section id="button-ghost" title="Ghost Button" description="Botón de acción terciaria - todas las variantes y estados">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
+              <.svg name="hero-moon" class="h-4 w-4" />
+            </.button>
+            <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">Default</.button>
+            <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
+              <.svg name="hero-moon" class="h-4 w-4" />
+              Default
+            </.button>
+            <.button navigate="/" variant="ghost">Link (navigate)</.button>
+            <.button href="https://hexdocs.pm/elixir/introduction.html" variant="ghost" target="_blank">Link (href)</.button>
+            <.button variant="ghost" loading>Loading...</.button>
+            <.button variant="ghost" disabled>Disabled</.button>
+          </div>
+        </.demo_section>
 
-  <%!-- Section: Link Navigate --%>
-  <.demo_section id="link-navigate" title="Link Navigate" description="Links internos - usa navigate (sin recarga de página)">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.link class="rounded-lg px-2 py-1" navigate="/">
-        <.svg name="hero-link" class="h-4 w-4" />
-      </.link>
-      <.link class="rounded-lg px-2 py-1" navigate="/">Navigate</.link>
-      <.link class="rounded-lg px-2 py-1" navigate="/">
-        <.svg name="hero-link" class="h-4 w-4" />
-        Navigate
-      </.link>
+        <%!-- Section: Danger Button --%>
+        <.demo_section id="button-danger" title="Danger Button" description="Botón de acción destructiva - todas las variantes y estados">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
+              <.svg name="hero-trash-mini" class="h-4 w-4" />
+            </.button>
+            <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">Default</.button>
+            <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
+              <.svg name="hero-trash-mini" class="h-4 w-4" />
+              Default
+            </.button>
+            <.button navigate="/" variant="danger">Link (navigate)</.button>
+            <.button href="https://hexdocs.pm/elixir/introduction.html" variant="danger" target="_blank">Link (href)</.button>
+            <.button variant="danger" loading>Loading...</.button>
+            <.button variant="danger" disabled>Disabled</.button>
+          </div>
+        </.demo_section>
+      </div>
     </div>
-  </.demo_section>
 
-  <%!-- Section: Link Href --%>
-  <.demo_section id="link-href" title="Link Href" description="Links externos - usa href (con recarga de página)">
-    <div class="flex items-center gap-4 flex-wrap">
-      <%!-- Escenarios --%>
-      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
-        <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
-      </.link>
-      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">Href</.link>
-      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
-        <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
-        Href
-      </.link>
+    <%!-- Link Tab --%>
+    <div data-tab-content="link" class="tab-content hidden">
+      <div class="space-y-16">
+        <%!-- Section: Link Navigate --%>
+        <.demo_section id="link-navigate" title="Link Navigate" description="Links internos - usa navigate (sin recarga de página)">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.link class="rounded-lg px-2 py-1" navigate="/">
+              <.svg name="hero-link" class="h-4 w-4" />
+            </.link>
+            <.link class="rounded-lg px-2 py-1" navigate="/">Navigate</.link>
+            <.link class="rounded-lg px-2 py-1" navigate="/">
+              <.svg name="hero-link" class="h-4 w-4" />
+              Navigate
+            </.link>
+          </div>
+        </.demo_section>
+
+        <%!-- Section: Link Href --%>
+        <.demo_section id="link-href" title="Link Href" description="Links externos - usa href (con recarga de página)">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
+              <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
+            </.link>
+            <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">Href</.link>
+            <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
+              <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
+              Href
+            </.link>
+          </div>
+        </.demo_section>
+      </div>
     </div>
-  </.demo_section>
+
+    <%!-- Dropdown Tab --%>
+    <div data-tab-content="dropdown" class="tab-content hidden">
+      <div class="space-y-16">
+        <%!-- Section: Dropdown - Menú de Acciones --%>
+        <.demo_section id="dropdown-actions" title="Dropdown - Menú de Acciones" description="Menú desplegable con acciones (editar, eliminar, ver)">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.dropdown id="actions-menu-1" position="left">
+              <:trigger :let={dropdown}>
+                <.button variant="secondary" phx-click={dropdown.toggle_command}>
+                  <.svg name="hero-ellipsis-vertical" class="h-4 w-4" />
+                  Acciones
+                </.button>
+              </:trigger>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-eye" class="w-5 h-5 text-subtle" />
+                  Ver detalles
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-pencil" class="w-5 h-5 text-subtle" />
+                  Editar
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-trash" class="w-5 h-5 text-subtle" />
+                  Eliminar
+                </.link>
+              </:item>
+            </.dropdown>
+
+            <.dropdown id="actions-menu-2" position="left">
+              <:trigger :let={dropdown}>
+                <.button variant="ghost" phx-click={dropdown.toggle_command}>
+                  <.svg name="hero-ellipsis-vertical" class="h-4 w-4" />
+                </.button>
+              </:trigger>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-arrow-down-tray" class="w-5 h-5 text-subtle" />
+                  Descargar
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-share" class="w-5 h-5 text-subtle" />
+                  Compartir
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-archive-box" class="w-5 h-5 text-subtle" />
+                  Archivar
+                </.link>
+              </:item>
+            </.dropdown>
+          </div>
+        </.demo_section>
+
+        <%!-- Section: Dropdown - Con Header --%>
+        <.demo_section id="dropdown-with-header" title="Dropdown - Con Header" description="Menú desplegable con sección de encabezado">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.dropdown id="filter-menu" position="left">
+              <:trigger :let={dropdown}>
+                <.button variant="secondary" phx-click={dropdown.toggle_command}>
+                  <.svg name="hero-funnel" class="h-4 w-4" />
+                  Filtrar
+                </.button>
+              </:trigger>
+              <:header>
+                <p class="text-sm font-semibold text-[var(--text-main)]">Filtrar por</p>
+                <p class="text-xs text-subtle">Selecciona una opción</p>
+              </:header>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-calendar" class="w-5 h-5 text-subtle" />
+                  Por fecha
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-user" class="w-5 h-5 text-subtle" />
+                  Por usuario
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-tag" class="w-5 h-5 text-subtle" />
+                  Por etiqueta
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-check-circle" class="w-5 h-5 text-subtle" />
+                  Por estado
+                </.link>
+              </:item>
+            </.dropdown>
+          </div>
+        </.demo_section>
+
+        <%!-- Section: Dropdown - Posiciones --%>
+        <.demo_section id="dropdown-positions" title="Dropdown - Posiciones" description="Menú desplegable con diferentes posiciones (izquierda y derecha)">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.dropdown id="dropdown-right" position="right">
+              <:trigger :let={dropdown}>
+                <.button variant="secondary" phx-click={dropdown.toggle_command}>
+                  Alineado a la derecha
+                  <.svg name="hero-chevron-down" class="h-4 w-4" />
+                </.button>
+              </:trigger>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-cog-6-tooth" class="w-5 h-5 text-subtle" />
+                  Configuración
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-user-circle" class="w-5 h-5 text-subtle" />
+                  Perfil
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-question-mark-circle" class="w-5 h-5 text-subtle" />
+                  Ayuda
+                </.link>
+              </:item>
+            </.dropdown>
+
+            <.dropdown id="dropdown-left" position="left">
+              <:trigger :let={dropdown}>
+                <.button variant="secondary" phx-click={dropdown.toggle_command}>
+                  <.svg name="hero-chevron-down" class="h-4 w-4" />
+                  Alineado a la izquierda
+                </.button>
+              </:trigger>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-cog-6-tooth" class="w-5 h-5 text-subtle" />
+                  Configuración
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-user-circle" class="w-5 h-5 text-subtle" />
+                  Perfil
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-question-mark-circle" class="w-5 h-5 text-subtle" />
+                  Ayuda
+                </.link>
+              </:item>
+            </.dropdown>
+          </div>
+        </.demo_section>
+
+        <%!-- Section: Dropdown - Con Links Externos --%>
+        <.demo_section id="dropdown-external" title="Dropdown - Con Links Externos" description="Menú desplegable que incluye navegación externa">
+          <div class="flex items-center gap-4 flex-wrap">
+            <.dropdown id="resources-menu">
+              <:trigger :let={dropdown}>
+                <.button variant="ghost" phx-click={dropdown.toggle_command}>
+                  <.svg name="hero-book-open" class="h-4 w-4" />
+                  Recursos
+                </.button>
+              </:trigger>
+              <:header>
+                <p class="text-sm font-semibold text-[var(--text-main)]">Documentación</p>
+              </:header>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-home" class="w-5 h-5 text-subtle" />
+                  Inicio
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link href="https://hexdocs.pm/phoenix" target="_blank" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-arrow-top-right-on-square" class="w-5 h-5 text-subtle" />
+                  Phoenix Docs
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link href="https://hexdocs.pm/elixir" target="_blank" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-arrow-top-right-on-square" class="w-5 h-5 text-subtle" />
+                  Elixir Docs
+                </.link>
+              </:item>
+              <:item :let={assigns}>
+                <.link navigate="/demo" phx-click={assigns.hide_command} class="w-full flex items-center gap-3">
+                  <.svg name="hero-academic-cap" class="w-5 h-5 text-subtle" />
+                  Tutoriales
+                </.link>
+              </:item>
+            </.dropdown>
+          </div>
+        </.demo_section>
+      </div>
+    </div>
+
+    <%!-- Select Tab (placeholder) --%>
+    <div data-tab-content="select" class="tab-content hidden">
+      <div class="space-y-16">
+        <.demo_section id="select-demo" title="Select" description="Selectores con búsqueda - próximamente">
+          <p class="text-subtle">Contenido próximamente...</p>
+        </.demo_section>
+      </div>
+    </div>
+
+    <%!-- Input Tab (placeholder) --%>
+    <div data-tab-content="input" class="tab-content hidden">
+      <div class="space-y-16">
+        <.demo_section id="input-demo" title="Input" description="Campos de formulario - próximamente">
+          <p class="text-subtle">Contenido próximamente...</p>
+        </.demo_section>
+      </div>
+    </div>
+
+    <%!-- Modal Tab (placeholder) --%>
+    <div data-tab-content="modal" class="tab-content hidden">
+      <div class="space-y-16">
+        <.demo_section id="modal-demo" title="Modal" description="Diálogos modales - próximamente">
+          <p class="text-subtle">Contenido próximamente...</p>
+        </.demo_section>
+      </div>
+    </div>
+  </div>
 </div>
-

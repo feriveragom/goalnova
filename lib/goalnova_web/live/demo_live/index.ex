@@ -28,4 +28,27 @@ defmodule GoalnovaWeb.DemoLive.Index do
 
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_event("dropdown_action", %{"action" => action}, socket) do
+    message = case action do
+      "edit" -> "Acción: Editar elemento"
+      "delete" -> "Acción: Eliminar elemento"
+      "download" -> "Acción: Descargar archivo"
+      "archive" -> "Acción: Archivar elemento"
+      "filter_date" -> "Acción: Filtrar por fecha"
+      "filter_tag" -> "Acción: Filtrar por etiqueta"
+      "profile" -> "Acción: Ver perfil"
+      "settings" -> "Acción: Abrir configuración"
+      "help" -> "Acción: Mostrar ayuda"
+      "tutorials" -> "Acción: Ver tutoriales"
+      _ -> "Acción del dropdown: #{action}"
+    end
+
+    socket =
+      socket
+      |> put_flash(:info, message)
+
+    {:noreply, socket}
+  end
 end

@@ -3,13 +3,14 @@
 # Crear proyecto Phoenix desde cero
 
 ```bash
-mix phx.new . --no-install --adapter bandit
+echo -e "Y\nn" | mix phx.new . --no-install --adapter bandit
 ```
 
 **Opciones importantes:**
 - `.` - Crea el proyecto en el directorio actual
 - `--no-install` - No instala dependencias (solo crea la estructura)
 - `--adapter bandit` - Usa Bandit como servidor HTTP (según nuestro stack)
+- `echo -e "Y\nn" |` - Responde automáticamente a las preguntas: `Y` para confirmar que el directorio existe, `n` para no sobrescribir el README.md existente
 
 ## Verificar que funciona
 
@@ -161,4 +162,8 @@ sh start_dev.sh
 
 ---
 
-# Incrementos a: proyecto Phoenix desde cero
+# Detener procesos en el puerto 4000
+
+```shell
+powershell.exe -Command '$conn = Get-NetTCPConnection -LocalPort 4000 -State Listen -ErrorAction SilentlyContinue; if ($conn -and $conn.OwningProcess -gt 0) { $processId = $conn.OwningProcess; try { $proc = Get-Process -Id $processId -ErrorAction Stop; Stop-Process -Id $processId -Force; Write-Host "Proceso $processId ($($proc.ProcessName)) detenido" } catch { Write-Host "No se pudo detener el proceso $processId" } } else { Write-Host "No hay proceso escuchando en puerto 4000" }'
+```

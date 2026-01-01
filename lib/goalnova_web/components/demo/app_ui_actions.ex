@@ -5,6 +5,7 @@ defmodule GoalnovaWeb.Components.Demo.AppUiActions do
   use Phoenix.Component
 
   import GoalnovaWeb.CoreComponents
+  alias Phoenix.LiveView.JS
 
   embed_templates "*.html"
 end

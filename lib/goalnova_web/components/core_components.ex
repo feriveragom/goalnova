@@ -668,58 +668,84 @@ defmodule GoalnovaWeb.CoreComponents do
   @doc """
   Renders a reusable dropdown menu component.
 
+  The `:item` slot receives `hide_command` which should be used to close the dropdown.
+  You can pass any component (`.link`, `.button`, etc.) inside the item slot.
+
   ## Examples
 
       <.dropdown id="profile-menu">
         <:trigger :let={dropdown}>
-          <button phx-click={JS.toggle(to: "#profile-menu-dropdown")}>
+          <button phx-click={dropdown.toggle_command}>
             Click me
           </button>
         </:trigger>
         <:header>
           <p>User info</p>
         </:header>
-        <:item navigate="/profile" icon="hero-user">
-          Mi Perfil
+        <:item :let={hide_command}>
+          <.link navigate="/profile" phx-click={hide_command} class="w-full flex items-center gap-3">
+            <.svg name="hero-user" class="w-5 h-5 text-subtle" />
+            Mi Perfil
+          </.link>
         </:item>
-        <:item navigate="/admin" icon="hero-cog-6-tooth">
-          Administración
+        <:item :let={hide_command}>
+          <.link navigate="/admin" phx-click={hide_command} class="w-full flex items-center gap-3">
+            <.svg name="hero-cog-6-tooth" class="w-5 h-5 text-subtle" />
+            Administración
+          </.link>
         </:item>
-        <%!-- Logout es ruta interna NO LiveView (controller), requiere href con redirect --%>
-        <:item href="/auth/logout" data-phx-link="redirect" icon="hero-arrow-right-on-rectangle" class="text-[var(--signal-danger-main)]">
-          Cerrar Sesión
+        <:item :let={hide_command}>
+          <.link href="/auth/logout" data-phx-link="redirect" phx-click={hide_command} class="w-full flex items-center gap-3 text-[var(--signal-danger-main)]">
+            <.svg name="hero-arrow-right-on-rectangle" class="w-5 h-5 text-subtle" />
+            Cerrar Sesión
+          </.link>
+        </:item>
+        <:item :let={hide_command}>
+          <.button phx-click={JS.push("download") |> hide_command} phx-value-format="pdf" variant="ghost" class="w-full justify-start">
+            <.svg name="hero-arrow-down-tray" class="w-5 h-5 text-subtle" />
+            Descargar PDF
+          </.button>
         </:item>
       </.dropdown>
 
-  The trigger slot receives a map with `dropdown_id` that should be used in the phx-click.
+  The trigger slot receives a map with `dropdown_id` and `toggle_command`.
   The dropdown_id format is: `{id}-dropdown` where `{id}` is the id attribute passed to the component.
   """
   attr :id, :string, required: true, doc: "Unique ID for the dropdown"
-  attr :position, :string, default: "right", values: ~w(left right), doc: "Dropdown position"
+  attr :position, :string, default: "right", values: ~w(left right), doc: "Dropdown position (left or right)"
   attr :width, :string, default: "w-64", doc: "Width of the dropdown"
   slot :trigger, required: true, doc: "Button or element that triggers the dropdown"
   slot :header, doc: "Optional header section at the top of the dropdown"
-  slot :item, doc: "Menu items" do
-    attr :navigate, :string
-    attr :href, :string
-    attr :icon, :string
+  slot :item, doc: "Menu items - receives hide_command to close dropdown" do
     attr :class, :string
   end
 
   def dropdown(assigns) do
-    dropdown_id = "#{@id}-dropdown"
+    # Ensure @id is available and valid
+    id = assigns.id || Map.get(assigns, :id)
+
+    if is_nil(id) or id == "" do
+      raise ArgumentError, "dropdown component requires a valid :id attribute. Got: #{inspect(id)}"
+    end
+
+    dropdown_id = "#{id}-dropdown"
+    toggle_command = JS.toggle(to: "##{dropdown_id}")
+    hide_command = JS.hide(to: "##{dropdown_id}")
+
+    # Assign id to @id for use in template
+    assigns = assign(assigns, :id, id)
 
     ~H"""
     <div class="relative" id={@id}>
-      <%= render_slot(@trigger, %{dropdown_id: dropdown_id}) %>
+      <%= render_slot(@trigger, %{dropdown_id: dropdown_id, toggle_command: toggle_command}) %>
 
       <div
         id={dropdown_id}
         class={[
-          "hidden absolute #{@position}-0 mt-2 #{@width} rounded-xl surface-card py-2 shadow-popover ring-1 ring-[var(--border-subtle)] z-50"
+          "hidden absolute #{@position}-0 top-full mt-2 #{@width} rounded-xl surface-card py-2 shadow-popover ring-1 ring-[var(--border-subtle)] z-50"
         ]}
-        phx-click-away={JS.hide(to: "##{dropdown_id}")}
-        phx-window-keydown={JS.hide(to: "##{dropdown_id}")}
+        phx-click-away={hide_command}
+        phx-window-keydown={hide_command}
         phx-key="escape"
       >
         <div :if={@header != []} class="px-4 py-3 border-b border-[var(--border-subtle)]">
@@ -729,32 +755,12 @@ defmodule GoalnovaWeb.CoreComponents do
         <div :if={@item != []}>
           <%= for item <- @item do %>
             <% item_class = Map.get(item, :class, "") %>
-            <%= if item[:navigate] do %>
-              <.link
-                navigate={item[:navigate]}
-                phx-click={JS.hide(to: "##{dropdown_id}")}
-                class={[
-                  "flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-main)] hover:bg-[var(--surface-hover)] transition-colors",
-                  item_class
-                ]}
-              >
-                <.svg :if={item[:icon]} name={item[:icon]} class="w-5 h-5 text-subtle" />
-                <%= render_slot(item) %>
-              </.link>
-            <% else %>
-              <.link
-                href={item[:href]}
-                data-phx-link={Map.get(item, :"data-phx-link", "redirect")}
-                phx-click={JS.hide(to: "##{dropdown_id}")}
-                class={[
-                  "flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-main)] hover:bg-[var(--surface-hover)] transition-colors",
-                  item_class
-                ]}
-              >
-                <.svg :if={item[:icon]} name={item[:icon]} class="w-5 h-5 text-subtle" />
-                <%= render_slot(item) %>
-              </.link>
-            <% end %>
+            <div class={[
+              "flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--text-main)] hover:bg-[var(--surface-hover)] transition-colors",
+              item_class
+            ]}>
+              <%= render_slot(item, %{hide_command: hide_command}) %>
+            </div>
           <% end %>
         </div>
       </div>
