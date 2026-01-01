@@ -8,7 +8,7 @@ defmodule GoalnovaWeb.DemoLive.Index do
     socket =
       socket
       |> assign(:current_user, current_user)
-      |> assign(:active_tab, "desktop")
+      |> assign(:active_tab, "actions")
 
     {:ok, socket}
   end

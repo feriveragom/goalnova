@@ -1,0 +1,108 @@
+<div class="space-y-16">
+  <%!-- Section: Primary Button --%>
+  <.demo_section id="button-primary" title="Primary Button" description="Botón de acción principal - todas las variantes y estados">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
+        <.svg name="hero-plus-mini" class="h-4 w-4" />
+      </.button>
+      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">Default</.button>
+      <.button variant="primary" phx-click="demo_button_click" phx-value-action="primary">
+        <.svg name="hero-plus-mini" class="h-4 w-4" />
+        Default
+      </.button>
+      <.button navigate="/" variant="primary">Link (navigate)</.button>
+      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="primary" target="_blank">Link (href)</.button>
+      <.button variant="primary" loading>Loading...</.button>
+      <.button variant="primary" disabled>Disabled</.button>
+    </div>
+  </.demo_section>
+
+  <%!-- Section: Secondary Button --%>
+  <.demo_section id="button-secondary" title="Secondary Button" description="Botón de acción secundaria - todas las variantes y estados">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
+        <.svg name="hero-pencil-mini" class="h-4 w-4" />
+      </.button>
+      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">Default</.button>
+      <.button variant="secondary" phx-click="demo_button_click" phx-value-action="secondary">
+        <.svg name="hero-pencil-mini" class="h-4 w-4" />
+        Default
+      </.button>
+      <.button navigate="/" variant="secondary">Link (navigate)</.button>
+      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="secondary" target="_blank">Link (href)</.button>
+      <.button variant="secondary" loading>Loading...</.button>
+      <.button variant="secondary" disabled>Disabled</.button>
+    </div>
+  </.demo_section>
+
+  <%!-- Section: Ghost Button --%>
+  <.demo_section id="button-ghost" title="Ghost Button" description="Botón de acción terciaria - todas las variantes y estados">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
+        <.svg name="hero-moon" class="h-4 w-4" />
+      </.button>
+      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">Default</.button>
+      <.button variant="ghost" phx-click="demo_button_click" phx-value-action="ghost">
+        <.svg name="hero-moon" class="h-4 w-4" />
+        Default
+      </.button>
+      <.button navigate="/" variant="ghost">Link (navigate)</.button>
+      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="ghost" target="_blank">Link (href)</.button>
+      <.button variant="ghost" loading>Loading...</.button>
+      <.button variant="ghost" disabled>Disabled</.button>
+    </div>
+  </.demo_section>
+
+  <%!-- Section: Danger Button --%>
+  <.demo_section id="button-danger" title="Danger Button" description="Botón de acción destructiva - todas las variantes y estados">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
+        <.svg name="hero-trash-mini" class="h-4 w-4" />
+      </.button>
+      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">Default</.button>
+      <.button variant="danger" phx-click="demo_button_click" phx-value-action="danger">
+        <.svg name="hero-trash-mini" class="h-4 w-4" />
+        Default
+      </.button>
+      <.button navigate="/" variant="danger">Link (navigate)</.button>
+      <.button href="https://hexdocs.pm/elixir/introduction.html" variant="danger" target="_blank">Link (href)</.button>
+      <.button variant="danger" loading>Loading...</.button>
+      <.button variant="danger" disabled>Disabled</.button>
+    </div>
+  </.demo_section>
+
+  <%!-- Section: Link Navigate --%>
+  <.demo_section id="link-navigate" title="Link Navigate" description="Links internos - usa navigate (sin recarga de página)">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.link class="rounded-lg px-2 py-1" navigate="/">
+        <.svg name="hero-link" class="h-4 w-4" />
+      </.link>
+      <.link class="rounded-lg px-2 py-1" navigate="/">Navigate</.link>
+      <.link class="rounded-lg px-2 py-1" navigate="/">
+        <.svg name="hero-link" class="h-4 w-4" />
+        Navigate
+      </.link>
+    </div>
+  </.demo_section>
+
+  <%!-- Section: Link Href --%>
+  <.demo_section id="link-href" title="Link Href" description="Links externos - usa href (con recarga de página)">
+    <div class="flex items-center gap-4 flex-wrap">
+      <%!-- Escenarios --%>
+      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
+        <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
+      </.link>
+      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">Href</.link>
+      <.link class="rounded-lg px-2 py-1" href="https://hexdocs.pm/elixir/introduction.html" target="_blank">
+        <.svg name="hero-arrow-top-right-on-square" class="h-4 w-4" />
+        Href
+      </.link>
+    </div>
+  </.demo_section>
+</div>
+

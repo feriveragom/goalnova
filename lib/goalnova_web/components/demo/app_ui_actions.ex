@@ -1,6 +1,6 @@
-defmodule GoalnovaWeb.Components.Demo.AppUiMobile do
+defmodule GoalnovaWeb.Components.Demo.AppUiActions do
   @moduledoc """
-  Componente demo para UI Mobile
+  Componente demo para UI Actions (Botones y Links)
   """
   use Phoenix.Component
 

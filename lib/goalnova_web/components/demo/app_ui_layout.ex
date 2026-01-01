@@ -1,6 +1,6 @@
-defmodule GoalnovaWeb.Components.Demo.AppUiDesktop do
+defmodule GoalnovaWeb.Components.Demo.AppUiLayout do
   @moduledoc """
-  Componente demo para UI Desktop
+  Componente demo para UI Layout (Cards, Containers, Grids)
   """
   use Phoenix.Component
 

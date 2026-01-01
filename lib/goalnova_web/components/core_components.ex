@@ -900,10 +900,6 @@ defmodule GoalnovaWeb.CoreComponents do
     default: "primary",
     values: ~w(primary secondary ghost danger),
     doc: "Button style variant"
-  attr :size, :string,
-    default: "default",
-    values: ~w(sm default lg),
-    doc: "Button size"
   attr :navigate, :string,
     doc: "INTERNAL navigation only - Routes within the application (e.g., \"/\", \"/profile\"). Uses patch navigation (no page reload)."
   attr :href, :string,
@@ -936,10 +932,10 @@ defmodule GoalnovaWeb.CoreComponents do
     button_classes =
       [
         "btn",
-        # Size variants
-        assigns.size == "sm" && "px-2.5 py-0.5 text-xs",
-        assigns.size == "default" && "px-3 py-1 text-sm",
-        assigns.size == "lg" && "px-4 py-1.5 text-base",
+        # Responsive size: Mobile-first (más grande para touch targets) -> Desktop (más compacto)
+        # Mobile (base): py-3 px-4 text-base → ~48px altura (mínimo touch target WCAG: 44-48px)
+        # Desktop (sm: 640px+): py-1 px-3 text-sm → ~32px altura (compacto, cursor preciso)
+        "py-3 px-4 text-base sm:py-1 sm:px-3 sm:text-sm",
         # Style variants mapped to Master Classes
         assigns.variant == "primary" && "btn-primary",
         assigns.variant == "secondary" && "btn-secondary",
