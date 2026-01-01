@@ -38,7 +38,14 @@ defmodule GoalnovaWeb.CoreComponents do
   """
   attr :id, :string, required: true
   attr :show, :boolean, default: false
+
+  attr :size, :string,
+    default: "3xl",
+    values: ~w(sm md lg xl 2xl 3xl 5xl 7xl),
+    doc: "the size of the modal"
+
   attr :on_cancel, JS, default: %JS{}
+  attr :hidden_close_button, :boolean, default: false
   slot :inner_block, required: true
 
   def modal(assigns) do
@@ -47,10 +54,11 @@ defmodule GoalnovaWeb.CoreComponents do
       id={@id}
       phx-mounted={@show && show_modal(@id)}
       phx-remove={hide_modal(@id)}
+      data-show={show_modal(@id)}
       data-cancel={JS.exec(@on_cancel, "phx-remove")}
-      class="relative z-50 hidden"
+      class="relative z-40 hidden"
     >
-      <div id={"#{@id}-bg"} class="bg-zinc-50/90 fixed inset-0 transition-opacity" aria-hidden="true" />
+      <div id={"#{@id}-bg"} class="bg-[var(--surface-overlay)]/80 backdrop-blur-sm fixed inset-0 transition-opacity" aria-hidden="true" />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -60,22 +68,32 @@ defmodule GoalnovaWeb.CoreComponents do
         tabindex="0"
       >
         <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
+          <div class={["w-full p-3 sm:p-4 lg:py-6",
+            @size == "sm" && "max-w-sm",
+            @size == "md" && "max-w-md",
+            @size == "lg" && "max-w-lg",
+            @size == "xl" && "max-w-xl",
+            @size == "2xl" && "max-w-2xl",
+            @size == "3xl" && "max-w-3xl",
+            @size == "5xl" && "max-w-5xl",
+            @size == "7xl" && "max-w-7xl"
+          ]}>
+          <%!-- phx-click-away={JS.exec("data-cancel", to: "##{@id}")} --%>
             <.focus_wrap
               id={"#{@id}-container"}
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
-              phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl bg-white p-14 shadow-lg ring-1 transition"
+              class="shadow-zinc-700/10 ring-zinc-700/10 relative hidden rounded-2xl surface-card p-6 shadow-xl ring-1 transition"
             >
-              <div class="absolute top-6 right-5">
+              <div class="absolute top-6 right-8">
                 <button
+                  :if={not @hidden_close_button}
                   phx-click={JS.exec("data-cancel", to: "##{@id}")}
                   type="button"
-                  class="-m-3 flex-none p-3 opacity-20 hover:opacity-40"
-                  aria-label={gettext("close")}
+                  class="-my-3 -ml-3 -mr-6 flex-none opacity-20 hover:opacity-40"
+                  aria-label="close"
                 >
-                  <.icon name="hero-x-mark-solid" class="h-5 w-5" />
+                  <.svg name="hero-x-mark-solid" class="h-5 w-5" />
                 </button>
               </div>
               <div id={"#{@id}-content"}>
@@ -113,6 +131,7 @@ defmodule GoalnovaWeb.CoreComponents do
       :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+      phx-hook="Flash"
       role="alert"
       class={[
         "fixed top-2 right-2 mr-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
@@ -1047,22 +1066,63 @@ defmodule GoalnovaWeb.CoreComponents do
   """
   attr :id, :string, required: true, doc: "Unique ID for the section"
   attr :title, :string, required: true, doc: "Section title"
-  attr :description, :string, required: true, doc: "Section description"
+  attr :description, :string, default: nil, doc: "Section description"
   slot :inner_block, required: true
 
   def demo_section(assigns) do
     ~H"""
-    <div id={@id} class="space-y-4">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-semibold text-[var(--text-main)]">
-          <%= @title %>
-        </h2>
-        <p class="mt-1 text-sm text-subtle">
-          <%= @description %>
-        </p>
+    <section id={@id} class="scroll-mt-20">
+      <div class="border-b border-[var(--border-subtle)] pb-4 mb-6">
+        <h2 class="text-xl font-semibold text-[var(--text-main)]"><%= @title %></h2>
+        <p :if={@description} class="mt-1 text-sm text-subtle"><%= @description %></p>
       </div>
-      <div class="pt-4">
-        <%= render_slot(@inner_block) %>
+      <%= render_slot(@inner_block) %>
+    </section>
+    """
+  end
+
+  @doc """
+  Renders a component preview card for demo pages.
+  """
+  attr :title, :string, required: true
+  attr :count, :string, required: true
+  attr :icon, :string, required: true
+  attr :status, :string, values: ["available", "pending"], default: "pending"
+
+  def component_preview_card(assigns) do
+    ~H"""
+    <div class={[
+      "relative rounded-lg border p-6 transition-all",
+      @status == "available" && "surface-card border-[var(--border-subtle)] hover:border-[var(--border-strong)] cursor-pointer",
+      @status == "pending" && "bg-[var(--surface-sunken)] border-[var(--border-subtle)] opacity-60"
+    ]}>
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class={[
+            "rounded-lg p-2",
+            @status == "available" && "bg-[var(--brand-subtle)]",
+            @status == "pending" && "bg-[var(--surface-sunken)]"
+          ]}>
+            <.svg name={@icon} class={[
+              "h-6 w-6",
+              @status == "available" && "text-brand",
+              @status == "pending" && "text-subtle"
+            ]} />
+          </div>
+          <div>
+            <h3 class={[
+              "font-medium",
+              @status == "available" && "text-[var(--text-main)]",
+              @status == "pending" && "text-subtle"
+            ]}>
+              <%= @title %>
+            </h3>
+            <p class="text-sm text-subtle"><%= @count %> components</p>
+          </div>
+        </div>
+        <span :if={@status == "pending"} class="text-xs px-2 py-1 rounded-full bg-[var(--surface-sunken)] text-subtle">
+          Próximamente
+        </span>
       </div>
     </div>
     """
